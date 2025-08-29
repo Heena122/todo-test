@@ -4,8 +4,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Pull latest code from GitHub
-                git branch: 'main', url: 'https://github.com/Heena122/Dummy-project-front-backend-live.git'
+                // Use correct branch name
+                git branch: 'master', url: 'https://github.com/Heena122/Dummy-project-front-backend-live.git'
             }
         }
 
@@ -31,13 +31,8 @@ pipeline {
             steps {
                 sh '''
                 echo "Starting deployment..."
-                # Example deployment commands:
-                # Build frontend
                 npm run build
-
-                # Copy build artifacts to server directory
                 cp -r build/* /var/www/html/
-
                 echo "Deployment finished."
                 '''
             }
