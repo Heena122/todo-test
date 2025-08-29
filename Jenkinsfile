@@ -5,7 +5,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Use correct branch name
-                git branch: 'master', url: 'https://github.com/Heena122/Dummy-project-front-backend-live.git'
+                git branch: 'master', url: 'https://github.com/Heena122/todo-test.git'
             }
         }
 
