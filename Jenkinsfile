@@ -1,28 +1,35 @@
 pipeline {
     agent any
 
+    environment {
+        VENV_DIR = '.venv'
+    }
+
     stages {
         stage('Checkout') {
             steps {
-                // Use correct branch name
                 git branch: 'master', url: 'https://github.com/Heena122/todo-test.git'
             }
         }
 
-        stage('Build') {
+        stage('Set up Python Env') {
             steps {
                 sh '''
-                echo "Installing dependencies..."
-                npm install
+                echo "Creating virtual environment..."
+                python3 -m venv $VENV_DIR
+                source $VENV_DIR/bin/activate
+                pip install --upgrade pip
+                pip install -r requirements.txt || echo "No requirements.txt found"
                 '''
             }
         }
 
-        stage('Test') {
+        stage('Run Tests') {
             steps {
                 sh '''
-                echo "Running tests..."
-                npm test
+                source $VENV_DIR/bin/activate
+                echo "Running Django tests..."
+                python manage.py test
                 '''
             }
         }
@@ -30,10 +37,10 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                echo "Starting deployment..."
-                npm run build
-                cp -r build/* /var/www/html/
-                echo "Deployment finished."
+                echo "Simulating deployment... (e.g., collectstatic, migrate)"
+                source $VENV_DIR/bin/activate
+                python manage.py migrate
+                python manage.py collectstatic --noinput
                 '''
             }
         }
